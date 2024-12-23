@@ -7,20 +7,20 @@ pipeline {
 
     stages {
         stage('Cleanup') {
-            steps {
-                sh '''
-                if [ "$(docker ps -q)" ]; then
-                   docker stop $(docker ps -q)
-                fi
-                if [ "$(docker ps -aq)" ]; then
-                    docker rm -f $(docker ps -aq)
-                fi
-                if [ -d "./testing_docker1" ]; then rm -rf "./flask-catexer-app"; fi
-                if [ "$(docker images -q flask)" ]; then docker rmi -f flask; fi
-                '''
-                // no [[ ]] !! its sh not bash
-            }
+                steps {
+            sh '''
+            # Stop and remove all running and stopped containers
+            docker ps -q | xargs -r docker stop
+            docker ps -aq | xargs -r docker rm -f
+
+            # Remove the flask image if it exists
+            docker images -q flask | xargs -r docker rmi -f
+
+            # Remove directory if it exists
+            rm -rf ./flask-catexer-app
+            '''
         }
+    }
         stage('Build') {
             steps {
                 sh 'git clone https://github.com/OmriFialkov/flask-catexer-app.git'
