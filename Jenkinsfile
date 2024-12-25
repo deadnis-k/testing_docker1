@@ -1,24 +1,17 @@
 pipeline {
     agent any
-
+	
     triggers {
         pollSCM('* * * * *')  // Poll SCM every minute
     }
-
     stages {
-        stage('clean code') {
+        stage('remove Repository') {
             steps {
-                echo 'Cleaning up any existing repository folder...'
-                sh 'rm -rf testing_docker1'
+                echo 'removing repository...'
+                sh 'rm -rf for_jenkins2'
             }
         }
-        stage('clone code') {
-            steps {
-                echo 'Cloning the repository...'
-                sh 'git clone https://github.com/deadnis-k/testing_docker1.git'
-            }
-        }
-        stage('Stop and Remove Docker Containers') {
+    stage('Stop and Remove Docker Containers') {
             steps {
                 script {
                     echo 'Stopping and removing all Docker containers...'
@@ -33,42 +26,33 @@ pipeline {
                 }
             }
         }
-        stage('Remove Docker Images') {
+        stage('Clone Repository') {
+            steps {
+                echo 'Cloning the repository...'
+                sh 'git clone https://github.com/nimrod-benaim/for_jenkins2.git/'
+	        	sh 'cp /home/vboxuser/Desktop/.env /var/lib/jenkins/workspace/pipeline1/for_jenkins2'
+            }
+        }
+        stage('Run Docker Compose') {
             steps {
                 script {
-                    echo 'Removing all Docker images...'
-                    // Remove all Docker images
+                    echo 'Starting Docker Compose...'
+                    sh 'ls'
                     sh '''
-                    docker images -q | xargs -r docker rmi -f
+                    cd for_jenkins2
+                    docker-compose down -v # Stop any running services
+                    docker-compose up -d --build  # Start services in detached mode
+                    
                     '''
                 }
             }
         }
-        stage('docker build') {
+        stage('test') {
             steps {
-                echo 'Building Docker image...'
-                sh 'docker build -t test:0.0.1 testing_docker1'
+                echo 'testing...'
+                sh'sleep 25'
+                sh 'curl http://localhost:5000'
             }
-        }
-        stage('docker run') {
-            steps {
-                echo 'Running Docker container...'
-                sh 'docker run -d -p 5000:5000 test:0.0.1'
-            }
-        }
-        stage('is the site online') {
-            steps {
-                echo 'Checking connectivity to the site...'
-                sh 'ping -c 4 localhost'
-            }
-        }
-    }
-
-    post {
-        always {
-            // Clean up and ensure the system is in a stable state
-            echo 'Cleaning up unused Docker resources...'
-            sh 'docker system prune -f'
         }
     }
 }
