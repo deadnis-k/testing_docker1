@@ -48,7 +48,7 @@ pipeline {
                 echo 'Copying .env file...'
                 withCredentials([file(credentialsId: 'env-scret', variable: 'ENV_FILE')]) {
                     sh '''
-                    cp "$ENV_FILE" for_jenkins2/.env
+                    cp "$ENV_FILE" testing_docker1/.env
                     '''
                 }
             }
@@ -59,7 +59,7 @@ pipeline {
                     echo 'Starting Docker Compose...'
                     sh 'ls'
                     sh '''
-                    cd for_jenkins2
+                    cd testing_docker1
                     docker-compose down -v # Stop any running services
                     docker-compose up -d --build  # Start services in detached mode
                     
