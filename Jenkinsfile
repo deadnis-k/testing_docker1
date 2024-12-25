@@ -46,7 +46,7 @@ pipeline {
 		stage('Copy .env File') {
             steps {
                 echo 'Copying .env file...'
-                withCredentials([file(credentialsId: '.env', variable: 'ENV_FILE')]) {
+                withCredentials([file(credentialsId: 'env-scret', variable: 'ENV_FILE')]) {
                     sh '''
                     cp "$ENV_FILE" for_jenkins2/.env
                     '''
