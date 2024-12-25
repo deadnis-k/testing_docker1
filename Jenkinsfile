@@ -40,7 +40,7 @@ pipeline {
         stage('Clone Repository') {
             steps {
                 echo 'Cloning the repository...'
-                sh 'git clone https://github.com/nimrod-benaim/for_jenkins2.git/'
+                sh 'git clone https://github.com/deadnis-k/testing_docker1.git'
             }
         }
 		stage('Copy .env File') {
