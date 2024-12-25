@@ -8,7 +8,7 @@ pipeline {
         stage('remove Repository') {
             steps {
                 echo 'removing repository...'
-                sh 'rm -rf .'
+                sh 'rm -rf ./*'
             }
         }
 		stage('Stop and Remove Docker Containers') {
