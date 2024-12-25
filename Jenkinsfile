@@ -30,7 +30,7 @@ pipeline {
             steps {
                 echo 'Cloning the repository...'
                 sh 'git clone https://github.com/nimrod-benaim/for_jenkins2.git/'
-	        	sh 'cp /home/vboxuser/Desktop/.env /var/lib/jenkins/workspace/pipeline1/for_jenkins2'
+	        	sh 'cp /home/vboxuser/Desktop/env-scret /var/lib/jenkins/workspace/pipeline1/for_jenkins2'
             }
         }
         stage('Run Docker Compose') {
