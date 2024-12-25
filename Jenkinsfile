@@ -60,6 +60,7 @@ pipeline {
                     sh 'ls'
                     sh '''
                     cd testing_docker1
+		    ls -a
                     docker-compose down -v # Stop any running services
                     docker-compose up -d --build  # Start services in detached mode
                     
