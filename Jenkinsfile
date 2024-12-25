@@ -11,7 +11,7 @@ pipeline {
                 sh 'rm -rf for_jenkins2'
             }
         }
-    stage('Stop and Remove Docker Containers') {
+		stage('Stop and Remove Docker Containers') {
             steps {
                 script {
                     echo 'Stopping and removing all Docker containers...'
@@ -26,11 +26,31 @@ pipeline {
                 }
             }
         }
+		stage('Remove Docker Images') {
+            steps {
+                script {
+                    echo 'Removing all Docker images...'
+                    // Remove all Docker images
+                    sh '''
+                    docker images -q | xargs -r docker rmi -f
+                    '''
+                }
+            }
+        }
         stage('Clone Repository') {
             steps {
                 echo 'Cloning the repository...'
                 sh 'git clone https://github.com/nimrod-benaim/for_jenkins2.git/'
-	        	sh 'cp /home/vboxuser/Desktop/env-scret /var/lib/jenkins/workspace/pipeline1/for_jenkins2'
+            }
+        }
+		stage('Copy .env File') {
+            steps {
+                echo 'Copying .env file...'
+                withCredentials([file(credentialsId: '.env', variable: 'ENV_FILE')]) {
+                    sh '''
+                    cp "$ENV_FILE" for_jenkins2/.env
+                    '''
+                }
             }
         }
         stage('Run Docker Compose') {
@@ -47,6 +67,21 @@ pipeline {
                 }
             }
         }
+		stage('Push Docker Image') {
+            steps {
+                script {
+                    echo 'Pushing Docker Image to Docker Hub...'
+                    withCredentials([usernamePassword(credentialsId: 'user_password_dockerhub', 
+                                                     usernameVariable: 'DOCKER_USER', 
+                                                     passwordVariable: 'DOCKER_PASSWORD')]) {
+                        sh '''
+                        echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USER" --password-stdin
+                        docker push nimrod1/cat_gif_site:ver-1.0
+                        '''
+                    }
+                }
+            }
+        }
         stage('test') {
             steps {
                 echo 'testing...'
@@ -55,4 +90,5 @@ pipeline {
             }
         }
     }
+   
 }
