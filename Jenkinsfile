@@ -72,12 +72,12 @@ pipeline {
             steps {
                 script {
                     echo 'Pushing Docker Image to Docker Hub...'
-                    withCredentials([usernamePassword(credentialsId: 'user_password_dockerhub', 
-                                                     usernameVariable: 'DOCKER_USER', 
-                                                     passwordVariable: 'DOCKER_PASSWORD')]) {
+                    withCredentials([usernamePassword(credentialsId: 'user_password_dockerhub', usernameVariable: 'DOCKER_USER', passwordVariable: 'DOCKER_PASSWORD')]) {
                         sh '''
                         echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USER" --password-stdin
-                        docker push nimrod1/cat_gif_site:ver-1.0
+                        docker tag deadnis/docker_compose_test:1.0.${BUILD_NUMBER} deadnis/docker_compose_test:latest
+                        docker push deadnis/docker_compose_test:1.0.${BUILD_NUMBER}
+                         docker push deadnis/docker_compose_test:latest
                         '''
                     }
                 }
