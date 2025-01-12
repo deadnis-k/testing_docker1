@@ -77,7 +77,7 @@ pipeline {
                         echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USER" --password-stdin
                         docker tag deadnis/docker_compose_test:1.0.${BUILD_NUMBER} deadnis/docker_compose_test:latest
                         docker push deadnis/docker_compose_test:1.0.${BUILD_NUMBER}
-                         docker push deadnis/docker_compose_test:latest
+                        docker push deadnis/docker_compose_test:latest
                         '''
                     }
                 }
