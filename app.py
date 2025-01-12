@@ -9,6 +9,7 @@ from time import sleep
 load_dotenv()
 app = Flask(__name__)
 
+<<<<<<< HEAD
 # Database configuration
 db_config = {
     "host": os.environ.get("DATABASE_HOST", "localhost"),
@@ -17,6 +18,12 @@ db_config = {
     "database": os.environ.get("DATABASE_NAME", "catnip_db"),
     "port": int(os.environ.get("DATABASE_PORT", 3306)),  # Add port to db_config
 }
+=======
+# list of cat images
+images = [
+    "https://th.bing.com/th/id/R.69bc0dd23ecbc52186c9f8226db663f6?rik=%2fkEH7eUmt7QsUQ&pid=ImgRaw&r=0",
+]
+>>>>>>> 1cb2700c6fe377bc25488fb5702651a51e899eee
 
 def get_db_connection():
     """Establish a database connection."""
